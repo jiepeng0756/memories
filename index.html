@@ -9,22 +9,47 @@
 <title>回忆 · 专属工作台</title>
 <script src="https://cdn.jsdelivr.net/npm/twemoji@14.0.2/dist/twemoji.min.js" crossorigin="anonymous"></script>
 <script>
-/* Emoji 兜底：检测系统是否有彩色 emoji 字体，没有就用 Twemoji 转成图片，
-   这样任何手机/浏览器都能稳定渲染，不会出现方块。 */
+/* Emoji 兜底：把 emoji 转成 Twemoji 图片，避免方块。
+   用 MutationObserver 监听新增内容，只解析未处理的 emoji，不会闪烁。 */
 window.addEventListener("DOMContentLoaded", function(){
-  if(window.twemoji){
-    try {
-      // 强制把页面所有 emoji 转成 Twemoji 图片（72x72 png）
-      twemoji.parse(document.body, {folder:"72x72", ext:".png"});
-      // 每隔一会儿重新解析（动态加载的内容如天气预报/穿搭）
-      setInterval(function(){
-        var main = document.getElementById("main");
-        if(main) twemoji.parse(main, {folder:"72x72", ext:".png"});
-        var cq = document.getElementById("cqOutfit");
-        if(cq) twemoji.parse(cq, {folder:"72x72", ext:".png"});
-      }, 1500);
-    } catch(e){}
+  if(!window.twemoji) return;
+  function parseEmojis(el){
+    if(!el || !el.querySelectorAll) return;
+    /* 只处理含有 emoji 文字节点、且还没被转换的元素 */
+    var nodes = el.querySelectorAll('*:not(.emoji):not([data-twemoji])');
+    var hasEmoji = false;
+    for(var i=0; i<nodes.length; i++){
+      var n = nodes[i];
+      /* 跳过已经包含 img.emoji 的元素 */
+      if(n.querySelector('img.emoji')) continue;
+      /* 跳过 script/style/textarea */
+      var tag = n.tagName;
+      if(tag==='SCRIPT'||tag==='STYLE'||tag==='TEXTAREA') continue;
+      /* 检查是否有 emoji 字符 */
+      var text = n.textContent || '';
+      if(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{2190}-\u{21FF}\u{2B00}-\u{2BFF}\uFE0F]/u.test(text)){
+        hasEmoji = true;
+        break;
+      }
+    }
+    if(hasEmoji){
+      try { twemoji.parse(el, {folder:"72x72", ext:".png"}); } catch(e){}
+    }
   }
+  /* 初始解析 */
+  setTimeout(function(){ parseEmojis(document.body); }, 100);
+  /* 监听 DOM 变化，只解析新增节点 */
+  var observer = new MutationObserver(function(mutations){
+    mutations.forEach(function(m){
+      for(var i=0; i<m.addedNodes.length; i++){
+        var node = m.addedNodes[i];
+        if(node.nodeType === 1){
+          setTimeout(function(){ parseEmojis(node); }, 10);
+        }
+      }
+    });
+  });
+  observer.observe(document.body, {childList:true, subtree:true});
 });
 </script>
 <style>
