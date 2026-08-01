@@ -1164,11 +1164,21 @@ async function cloudRestore(){
   const tk = getToken();
   try{
     const apiUrl = "https://api.github.com/repos/"+GH_OWNER+"/"+GH_REPO+"/contents/"+GH_BACKUP_PATH;
+    // 先获取文件信息（大文件 content 字段可能为空，需要用 download_url）
     const r = await fetch(apiUrl, {headers:{"Authorization":"token "+tk,"Accept":"application/vnd.github+json"}});
     if(!r.ok){ toast("云端没有备份数据("+r.status+")"); return; }
     const fileObj = await r.json();
-    const content_b64 = fileObj.content;
-    const jsonStr = base64ToStr(content_b64);
+    let jsonStr;
+    if(fileObj.content && fileObj.content.length > 0){
+      // 小文件：直接从 content 字段解码
+      jsonStr = base64ToStr(fileObj.content);
+    } else {
+      // 大文件：用 download_url（raw 链接）下载原始内容
+      toast("正在下载大文件…请耐心等待");
+      const r2 = await fetch(fileObj.download_url, {headers:{"Authorization":"token "+tk}});
+      if(!r2.ok){ toast("下载失败("+r2.status+")"); return; }
+      jsonStr = await r2.text();
+    }
     const data = JSON.parse(jsonStr);
     if(!data || (!data.photos && !data.diaries)){ toast("备份数据为空"); return; }
     let np = 0, nd = 0;
