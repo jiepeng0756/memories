@@ -1173,11 +1173,13 @@ async function cloudRestore(){
       // 小文件：直接从 content 字段解码
       jsonStr = base64ToStr(fileObj.content);
     } else {
-      // 大文件：用 download_url（raw 链接）下载原始内容
+      // 大文件：用 git blob API（支持 CORS，raw 链接会跨域）
       toast("正在下载大文件…请耐心等待");
-      const r2 = await fetch(fileObj.download_url, {headers:{"Authorization":"token "+tk}});
+      const blobUrl = "https://api.github.com/repos/"+GH_OWNER+"/"+GH_REPO+"/git/blobs/"+fileObj.sha;
+      const r2 = await fetch(blobUrl, {headers:{"Authorization":"token "+tk,"Accept":"application/vnd.github+json"}});
       if(!r2.ok){ toast("下载失败("+r2.status+")"); return; }
-      jsonStr = await r2.text();
+      const blob = await r2.json();
+      jsonStr = base64ToStr(blob.content);
     }
     const data = JSON.parse(jsonStr);
     if(!data || (!data.photos && !data.diaries)){ toast("备份数据为空"); return; }
