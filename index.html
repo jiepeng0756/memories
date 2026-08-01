@@ -1148,7 +1148,10 @@ async function cloudRestore(){
     const r = await fetch(GH_RAW+"?t="+Date.now());
     if(!r.ok){ toast("云端没有备份数据"); return; }
     const text = await r.text();
-    const data = JSON.parse(decodeURIComponent(escape(atob(text))));
+    let data;
+    try { data = JSON.parse(text.trim()); }
+    catch(e1){ try { data = JSON.parse(decodeURIComponent(escape(atob(text.trim())))); }
+               catch(e2){ throw new Error("数据格式无法解析"); } }
     if(!data || (!data.photos && !data.diaries)){ toast("备份数据为空"); return; }
     let np = 0, nd = 0;
     for(const p of (data.photos||[])){ const o = {...p}; delete o.id; await dbAdd("photos", o); np++; }
