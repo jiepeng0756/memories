@@ -1105,11 +1105,12 @@ function importBackup(file){
         恢复时从 GitHub raw 链接读取 backup-data.json。
    这样在微信内置浏览器里也能用，不依赖文件下载。
    注意：token 只在沙箱预览版中有效，不会推到 GitHub（避免被自动撤销）。*/
-let GH_TOKEN = "";   // 沙箱预览版会注入真实 token；GitHub 版留空（只能恢复，不能备份）
+let GH_TOKEN = "";   // GitHub 版留空（只能恢复，不能备份）
 const GH_OWNER = "jiepeng0756";
 const GH_REPO = "memories";
 const GH_BACKUP_PATH = "backup-data.json";
-const GH_RAW = "https://raw.githubusercontent.com/"+GH_OWNER+"/"+GH_REPO+"/main/"+GH_BACKUP_PATH;
+/* 用 jsdelivr CDN 读取备份（比 raw.githubusercontent.com 缓存更短，刷新更快） */
+const GH_RAW = "https://cdn.jsdelivr.net/gh/"+GH_OWNER+"/"+GH_REPO+"@main/"+GH_BACKUP_PATH;
 
 async function cloudBackup(){
   if(!GH_TOKEN){ toast("此版本不支持云端备份，请用旧预览链接备份"); return; }
