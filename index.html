@@ -5,7 +5,27 @@
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
 <title>回忆 · 专属工作台</title>
-<script src="https://cdn.jsdelivr.net/npm/twemoji@14.0.2/dist/twemoji.min.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/twemoji@14.0.2/dist/twemoji.min.js" crossorigin="anonymous">
+function renderArticles(){
+  const list = $("articleList");
+  const empty = $("articleEmpty");
+  if(ARTICLES.length === 0){list.innerHTML="";empty.classList.remove("hidden");return;}
+  empty.classList.add("hidden");
+  list.innerHTML = ARTICLES.map((art,i) =>
+    '<div class="card" onclick="showArticle('+i+')" style="cursor:pointer">'+
+      '<div class="card-tag">文章</div>'+
+      '<div class="article-title">'+esc(art.t)+'</div>'+
+      '<div class="article-author">—— '+esc(art.a)+'</div>'+
+      '<div class="article-body"><p>'+esc(art.b[0])+'...</p></div>'+
+    '</div>'
+  ).join("");
+}
+function showArticle(idx){
+  const art = ARTICLES[idx];if(!art)return;
+  $("artTitle").textContent=art.t;$("artAuthor").textContent="—— "+art.a;
+  $("artBody").innerHTML=art.b.map(p=>"<p>"+esc(p)+"</p>").join("");switchPage("home");
+}
+</script>
 <script>
 /* Emoji 兜底：把 emoji 转成 Twemoji 图片，避免方块。
    用 MutationObserver 监听新增内容，只解析未处理的 emoji，不会闪烁。 */
@@ -403,6 +423,7 @@ img.emoji{
       <div class="b-name">回忆</div>
     </div>
     <button class="nav-item active" data-page="home" onclick="switchPage('home')"><span class="n-icon">🏠</span><span>首页</span></button>
+    <button class="nav-item" data-page="articles" onclick="switchPage('articles')"><span class="n-icon">文章</span></button>
     <button class="nav-item" data-page="outfit" onclick="switchPage('outfit')"><span class="n-icon">??</span><span>??</span></button>
     <button class="nav-item" data-page="photo" onclick="switchPage('photo')"><span class="n-icon">📷</span><span>照片</span></button>
     <button class="nav-item" data-page="quote" onclick="switchPage('quote')"><span class="n-icon">📜</span><span>名人名句</span></button>
@@ -433,7 +454,17 @@ img.emoji{
         <div class="article-body" id="artBody"></div>
       </div>
       
+    
+    <!-- Articles Page -->
+    <section class="page hidden" id="page-articles">
+      <div class="page-head">
+        <h2>文章精选</h2>
+        <p class="p-sub">汇集优秀文章、诗词歌赋，每日更新</p>
+      </div>
+      <div id="articleList"></div>
+      <div id="articleEmpty" class="empty hidden"><span class="e-icon">暂无文章</span></div>
     </section>
+</section>
 
     <!-- 照片 -->
     <section class="page hidden" id="page-photo">
@@ -834,7 +865,7 @@ try{ localStorage.removeItem("memories_pwd"); }catch(e){} // 清除旧版本遗�
 function enterApp(){
   $("welcomeScreen").classList.add("hidden");
   $("app").classList.remove("hidden");
-  renderHome(); renderQuotes("today"); loadPhotos(); loadDiaries();
+  renderHome(); renderArticles(); renderQuotes("today"); loadPhotos(); loadDiaries();
 }
 function lockApp(){
   $("app").classList.add("hidden");
