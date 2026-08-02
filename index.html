@@ -1,6 +1,4 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
+<html lang="zh-CN"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
@@ -322,6 +320,31 @@ input,textarea{font-family:inherit;outline:none}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
 /* ========== 移动端适配 ========== */
+
+/* ========== ???? ========== */
+.outfit-weather-card{display:flex;flex-direction:column;gap:12px}
+.outfit-weather-header{display:flex;align-items:center;justify-content:space-between}
+.outfit-weather-loc{font-size:16px;font-weight:600;color:var(--text)}
+.outfit-weather-temp{font-size:42px;font-weight:700;color:var(--pink-dark);line-height:1}
+.outfit-weather-desc{font-size:14px;color:var(--text-light)}
+.outfit-weather-detail{display:flex;gap:16px;flex-wrap:wrap}
+.ow-label{font-size:13px;padding:4px 12px;background:var(--cream);border-radius:20px;color:var(--pink-dark)}
+.outfit-recommend-card .outfit-tip-item{display:flex;align-items:flex-start;gap:8px;padding:10px 0;border-bottom:1px solid var(--line);font-size:14px;color:var(--text)}
+.outfit-recommend-card .outfit-tip-item:last-child{border-bottom:none}
+.outfit-inspiration-card .outfit-inspire-desc{font-size:13px;color:var(--text-light);margin-bottom:14px}
+.outfit-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.outfit-img-card{border-radius:12px;overflow:hidden;background:var(--cream);border:1px solid var(--line);transition:transform .2s,box-shadow .2s}
+.outfit-img-card:hover{transform:translateY(-4px);box-shadow:0 8px 20px rgba(201,123,142,.15)}
+.outfit-img-card.outfit-match{border:2px solid var(--pink-dark);box-shadow:0 4px 16px rgba(201,123,142,.2)}
+.outfit-img-wrap{position:relative}
+.outfit-img-card img{width:100%;height:180px;object-fit:cover;display:block}
+.outfit-img-label{position:absolute;bottom:0;left:0;right:0;padding:20px 6px 6px;font-size:11px;color:#fff;background:linear-gradient(transparent,rgba(90,50,60,.7));text-align:center;font-weight:600;letter-spacing:.5px}
+.outfit-match-badge{position:absolute;top:6px;right:6px;background:var(--pink-dark);color:#fff;font-size:10px;padding:2px 7px;border-radius:8px;font-weight:600}
+@media(max-width:640px){
+  .outfit-grid{grid-template-columns:repeat(2,1fr)}
+  .outfit-img-card img{height:140px}
+  .outfit-weather-temp{font-size:32px}
+}
 @media (max-width:640px){
   #main{padding:18px 14px 80px}
   #sideNav{width:64px;padding:18px 8px 14px}
@@ -380,6 +403,7 @@ img.emoji{
       <div class="b-name">回忆</div>
     </div>
     <button class="nav-item active" data-page="home" onclick="switchPage('home')"><span class="n-icon">🏠</span><span>首页</span></button>
+    <button class="nav-item" data-page="outfit" onclick="switchPage('outfit')"><span class="n-icon">??</span><span>??</span></button>
     <button class="nav-item" data-page="photo" onclick="switchPage('photo')"><span class="n-icon">📷</span><span>照片</span></button>
     <button class="nav-item" data-page="quote" onclick="switchPage('quote')"><span class="n-icon">📜</span><span>名人名句</span></button>
     <button class="nav-item" data-page="diary" onclick="switchPage('diary')"><span class="n-icon">🍼</span><span>成长日记</span></button>
@@ -400,7 +424,7 @@ img.emoji{
     <section class="page" id="page-home">
       <div class="page-head">
         <h2>🏠 首页</h2>
-        <p class="p-sub"><span id="homeDate"></span> · 每日美文与穿搭，按日自动更新</p>
+        <p class="p-sub"><span id="homeDate"></span> · 每日美文精选，按日自动更新</p>
       </div>
       <div class="card">
         <span class="card-tag">✨ 今日美文</span>
@@ -408,11 +432,7 @@ img.emoji{
         <div class="article-author" id="artAuthor"></div>
         <div class="article-body" id="artBody"></div>
       </div>
-      <div class="card">
-        <span class="card-tag">👗 今日穿搭参考</span>
-        <div id="cqOutfit" class="cq-outfit"></div>
-        <div id="outfitList"></div>
-      </div>
+      
     </section>
 
     <!-- 照片 -->
@@ -424,7 +444,7 @@ img.emoji{
       <div class="photo-toolbar">
         <button class="btn" onclick="document.getElementById('photoFile').click()">＋ 上传照片</button>
         <span class="photo-count" id="photoCount"></span>
-        <input type="file" id="photoFile" accept="image/*" multiple class="hidden">
+        <input type="file" id="photoFile" accept="image/*" multiple="" class="hidden">
       </div>
       <div class="photo-grid" id="photoGrid"></div>
       <div class="empty hidden" id="photoEmpty"><span class="e-icon">🌷</span>相册还是空的，点击「上传照片」珍藏第一张回忆吧</div>
@@ -446,7 +466,35 @@ img.emoji{
     </section>
 
     <!-- 娃娃的成长日记 -->
-    <section class="page hidden" id="page-diary">
+    <section class="page hidden" 
+    <!-- ?? -->
+    <section class="page hidden" id="page-outfit">
+      <div class="page-head">
+        <h2>?? ????</h2>
+        <p class="p-sub">?????? ? ?????? ? ?????</p>
+      </div>
+      <!-- ???? -->
+      <div class="card outfit-weather-card">
+        <div class="outfit-weather-header">
+          <span class="outfit-weather-loc">?? ??</span>
+          <span class="outfit-weather-temp" id="outfitTemp">--?C</span>
+        </div>
+        <div class="outfit-weather-desc" id="outfitWeatherDesc">??????</div>
+        <div class="outfit-weather-detail" id="outfitWeatherDetail"></div>
+      </div>
+      <!-- ???? -->
+      <div class="card outfit-recommend-card">
+        <span class="card-tag">? ??????</span>
+        <div id="outfitTips"></div>
+      </div>
+      <!-- ?????? -->
+      <div class="card outfit-inspiration-card">
+        <span class="card-tag">?? ??????</span>
+        <p class="outfit-inspire-desc">???? 5 ?????????????</p>
+        <div class="outfit-grid" id="outfitGrid"></div>
+      </div>
+    </section>
+id="page-diary">
       <div class="page-head">
         <h2>🍼 娃娃的成长日记</h2>
         <p class="p-sub">记录孩子的成长日常，所有日记永久保存</p>
@@ -680,6 +728,7 @@ function switchPage(name){
   document.querySelectorAll(".page").forEach(p=>p.classList.add("hidden"));
   $("page-"+name).classList.remove("hidden");
   $("main").scrollTop = 0;
+  if(name==="outfit") loadOutfitPage();
 }
 
 /* ================= 首页：每日美文 + 穿搭 ================= */
@@ -707,6 +756,116 @@ function renderHome(){
 }
 /* 重庆今日穿搭：实时获取天气，按温度+天气状况推荐，每小时自动刷新 */
 let cqTimer = null;
+
+/* ================= ???? ================= */
+function loadOutfitPage(){
+  renderOutfitWeather();
+  renderOutfitInspiration();
+}
+function renderOutfitWeather(){
+  const tempEl = document.getElementById('outfitTemp');
+  const descEl = document.getElementById('outfitWeatherDesc');
+  const detailEl = document.getElementById('outfitWeatherDetail');
+  if(!tempEl) return;
+  const cached = localStorage.getItem('cq_weather');
+  if(cached){
+    try{
+      const d = JSON.parse(cached);
+      const age = Date.now() - d.ts;
+      if(age < 3600000){
+        applyWeatherUI(d.data, tempEl, descEl, detailEl);
+        return;
+      }
+    }catch(e){}
+  }
+  tempEl.textContent = '--?C';
+  descEl.textContent = '??????';
+  fetch('https://api.open-meteo.com/v1/forecast?latitude=29.56&longitude=106.55&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m,apparent_temperature,is_day&forecast_days=1&timezone=Asia/Shanghai')
+    .then(r=>r.json())
+    .then(d=>{
+      const cur = d.current||{};
+      const temp = Math.round(cur.temperature_2m||30);
+      const feel = Math.round(cur.apparent_temperature||temp);
+      const hum = cur.relative_humidity_2m||0;
+      const wind = Math.round(cur.wind_speed_10m||0);
+      const wcode = cur.weather_code||0;
+      const cond = wmoDesc(wcode);
+      const isDay = cur.is_day !== 0;
+      const weatherData = {ts:Date.now(), data:{temp, feel, hum, wind, wcode, cond, isDay}};
+      localStorage.setItem('cq_weather', JSON.stringify(weatherData));
+      applyWeatherUI(weatherData.data, tempEl, descEl, detailEl);
+    })
+    .catch(()=>{
+      tempEl.textContent = '--?C';
+      descEl.textContent = '??????';
+    });
+}
+function applyWeatherUI(d, tempEl, descEl, detailEl){
+  const {temp, feel, hum, wind, wcode, cond, isDay} = d;
+  tempEl.textContent = temp + '?C';
+  const feelText = feel !== temp ? ' ??'+feel+'?' : '';
+  descEl.textContent = cond + feelText + (hum ? ' ? ??'+hum+'%' : '') + (wind ? ' ? ?'+wind+'km/h' : '');
+  const label = temp>=35?'??':temp>=32?'??':temp>=26?'??':temp>=18?'??':temp>=10?'??':temp>=0?'??':'??';
+  const icon = isDay?'??':'??';
+  detailEl.innerHTML = '<span class="ow-label">'+icon+' '+label+'</span>';
+  renderOutfitRecommend(temp, hum, wind, wcode, cond, isDay);
+}
+function renderOutfitRecommend(temp, hum, wind, wcode, cond, isDay){
+  const tipsEl = document.getElementById('outfitTips');
+  if(!tipsEl) return;
+  const isRain = [51,53,55,56,57,61,63,65,66,67,80,81,82].includes(wcode);
+  const isSnow = [71,73,75,77,85,86].includes(wcode);
+  const tips = [];
+  let top;
+  if(temp>=35) top='????/????';
+  else if(temp>=30) top='????/??';
+  else if(temp>=22) top='???/???';
+  else if(temp>=14) top='???/????';
+  else if(temp>=5) top='??+???';
+  else top='???+????+??';
+  tips.push({icon:'??', text:'???' + top});
+  let bot;
+  if(temp>=30) bot='????/????';
+  else if(temp>=22) bot='???/???';
+  else if(temp>=14) bot='???/??';
+  else bot='??/???';
+  tips.push({icon:'??', text:'???' + bot});
+  let shoe;
+  if(temp>=26) shoe='??/???';
+  else if(temp>=14) shoe='???/????';
+  else shoe='??/??';
+  if(isRain) shoe+='?????';
+  tips.push({icon:'??', text:'???' + shoe});
+  if(temp<18){
+    let coat = temp>=10?'??/??':'???/????';
+    if(wind>=25) coat+='????';
+    tips.push({icon:'??', text:'???' + coat});
+  }
+  if(isRain) tips.push({icon:'??', text:'?????'});
+  if(temp>=28) tips.push({icon:'??', text:'????????'});
+  if(temp<10) tips.push({icon:'??', text:'???????'});
+  tipsEl.innerHTML = tips.map(t=>'<div class="outfit-tip-item">'+t.icon+' '+t.text+'</div>').join('');
+}
+function renderOutfitInspiration(){
+  const gridEl = document.getElementById('outfitGrid');
+  if(!gridEl) return;
+  const now = new Date();
+  const di = dayIndex();
+  const styleIdx = di % OUTFITS.length;
+  let cards = [];
+  for(let i=0; i<5; i++){
+    const idx = (styleIdx + i) % OUTFITS.length;
+    const o = OUTFITS[idx];
+    const isMatch = i===0;
+    cards.push('<div class="outfit-img-card'+(isMatch?' outfit-match':'')+'">'+
+      '<div class="outfit-img-wrap">'+
+      '<img src="data:image/jpeg;base64,'+o.img+'" alt="'+esc(o.name)+'" loading="lazy">'+
+      '<div class="outfit-img-label">'+esc(o.name)+'</div>'+
+      (isMatch?'<div class="outfit-match-badge">????</div>':'')+
+      '</div></div>');
+  }
+  gridEl.innerHTML = cards.join('');
+}
 function loadCqOutfit(){
   const el = $("cqOutfit");
   if(!el) return;
@@ -1354,5 +1513,6 @@ $("backupFile").addEventListener("change", e=>{
 /* ================= 启动 ================= */
 initStore();
 </script>
-</body>
-</html>
+
+
+</body></html>
