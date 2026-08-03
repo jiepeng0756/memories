@@ -292,6 +292,33 @@ input,textarea{font-family:inherit;outline:none}
   font-size:10px;padding:2px 8px;border-radius:8px;letter-spacing:.5px;font-weight:600}
 .cq-img-hint{font-size:11.5px;color:var(--text-light);margin-bottom:8px;display:flex;align-items:center;gap:4px}
 .cq-img-hint b{color:var(--pink-dark)}
+/* ===== 天气实时动态 ===== */
+.cq-wicon{font-size:28px;line-height:1;display:inline-block;filter:drop-shadow(0 2px 3px rgba(178,94,114,.25))}
+.cq-wicon.wi-sun{animation:wiSun 9s linear infinite;transform-origin:50% 50%}
+.cq-wicon.wi-float{animation:wiFloat 3s ease-in-out infinite}
+.cq-wicon.wi-rain{animation:wiFloat 2.4s ease-in-out infinite}
+@keyframes wiSun{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+@keyframes wiFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+.cq-live{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;color:#fff;
+  background:linear-gradient(135deg,#ff7a9a,#e0547e);border-radius:10px;padding:2px 8px;
+  box-shadow:0 2px 8px rgba(224,84,126,.3)}
+.cq-live .cq-dot{width:6px;height:6px;border-radius:50%;background:#7CFFB2;
+  box-shadow:0 0 0 0 rgba(124,255,178,.7);animation:cqPulse 1.6s infinite}
+@keyframes cqPulse{0%{box-shadow:0 0 0 0 rgba(124,255,178,.7)}70%{box-shadow:0 0 0 7px rgba(124,255,178,0)}100%{box-shadow:0 0 0 0 rgba(124,255,178,0)}}
+.cq-refresh{margin-left:6px;border:none;background:rgba(255,255,255,.7);border-radius:10px;
+  padding:3px 9px;font-size:14px;cursor:pointer;transition:transform .25s;color:var(--pink-dark)}
+.cq-refresh.spin{animation:cqSpin .9s linear}
+@keyframes cqSpin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+#cqClock{font-variant-numeric:tabular-nums;font-weight:700;color:var(--pink-dark)}
+.cq-outfit-temp{font-size:26px;font-weight:800;color:var(--pink-dark);line-height:1;
+  transition:color .3s}
+/* 穿搭图片更清晰：放大卡片、提高分辨率感 */
+.cq-img-card{flex:0 0 150px}
+.cq-img-card img{width:100%;height:200px;object-fit:cover;display:block;
+  image-rendering:-webkit-optimize-contrast;background:#f3eef0}
+.outfit-hero img{width:100%;height:220px;object-fit:cover;display:block;border-radius:12px 12px 0 0;
+  image-rendering:-webkit-optimize-contrast;background:linear-gradient(135deg,#fbe9ee,#f3e7ea)}
+.outfit-img-card img{width:100%;height:200px;object-fit:cover;display:block;background:#f3eef0}
 /* 大图查看 */
 #cqViewer{position:fixed;inset:0;z-index:125;background:rgba(40,20,26,.92);
   display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px}
@@ -351,6 +378,12 @@ input,textarea{font-family:inherit;outline:none}
 .ow-label{font-size:13px;padding:4px 12px;background:var(--cream);border-radius:20px;color:var(--pink-dark)}
 .outfit-recommend-card .outfit-tip-item{display:flex;align-items:flex-start;gap:8px;padding:10px 0;border-bottom:1px solid var(--line);font-size:14px;color:var(--text)}
 .outfit-recommend-card .outfit-tip-item:last-child{border-bottom:none}
+.outfit-rec-hero{position:relative;border-radius:14px;overflow:hidden;margin-bottom:14px;
+  box-shadow:0 6px 18px rgba(201,123,142,.18);background:linear-gradient(135deg,#fbe9ee,#f3e7ea)}
+.outfit-rec-hero img{width:100%;height:230px;object-fit:cover;display:block;background:linear-gradient(135deg,#fbe9ee,#f3e7ea)}
+.outfit-rec-hero .o-rec-tag{position:absolute;left:0;right:0;bottom:0;padding:22px 10px 9px;
+  font-size:13px;font-weight:700;color:#fff;text-align:center;letter-spacing:.5px;
+  background:linear-gradient(transparent,rgba(90,50,60,.72))}
 .outfit-inspiration-card .outfit-inspire-desc{font-size:13px;color:var(--text-light);margin-bottom:14px}
 .outfit-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
 .outfit-img-card{border-radius:12px;overflow:hidden;background:var(--cream);border:1px solid var(--line);transition:transform .2s,box-shadow .2s}
@@ -754,8 +787,64 @@ const OUTFITS = [
 {i:"👝",t:"包袋建议",d:"缎面手拿包或竹节包，古典气息更足。"},
 {i:"🪭",t:"氛围道具",d:"折扇或团扇，可做拍照道具与实用两不误。"},
 ]},
-{"name":"职场通勤风","img":"PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgNDAwIj48cmVjdCBmaWxsPSIjMmMzZTUwIiB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIvPjx0ZXh0IGZpbGw9IiNlY2YwZjEiIGZvbnQtc2l6ZT0iMjQiIHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjIwMCIgeT0iMTgwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiI+6IGM5Zy66YCa5Yuk6aOOPC90ZXh0Pjx0ZXh0IGZpbGw9IiNiZGMzYzciIGZvbnQtc2l6ZT0iMTYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjIwMCIgeT0iMjEwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiI+5bmy57uDIMK3IOWIqeiQvSDCtyDmsJTlnLrlhajlvIA8L3RleHQ+PC9zdmc+","items":[{"i":"衬衫","t":"主打单品","d":"白色真丝衬衫 + 深灰九分烟管裤，利落有型，气场全开。"},{"i":"手表","t":"细节加分","d":"金色细带腕表，低调中透出专业感。"},{"i":"高跟鞋","t":"鞋履选择","d":"黑色尖头细跟鞋或猫跟鞋，拉伸腿部线条。"},{"i":"包包","t":"包袋搭配","d":"黑色托特包，容量与质感兼备，通勤必备。"}]},{"name":"周末休闲风","img":"PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgNDAwIj48cmVjdCBmaWxsPSIjMjdhZTYwIiB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIvPjx0ZXh0IGZpbGw9IiNmZmYiIGZvbnQtc2l6ZT0iMjQiIHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjIwMCIgeT0iMTgwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiI+5ZGo5pyr5LyR6Zey6aOOPC90ZXh0Pjx0ZXh0IGZpbGw9IiNhOGU2Y2YiIGZvbnQtc2l6ZT0iMTYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjIwMCIgeT0iMjEwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiI+6IiS6YCCIMK3IOmaj+aApyDCtyDlh4/pvoQ8L3RleHQ+PC9zdmc+","items":[{"i":"卫衣","t":"主打单品","d":"宽松字母卫衣 + 高腰直筒牛仔裤，减龄又舒适。"},{"i":"帽子","t":"点睛单品","d":"棒球帽 + 帆布托特包，轻松随性。"},{"i":"运动鞋","t":"鞋履选择","d":"厚底老爹鞋或经典帆布鞋，舒适暴走无压力。"},{"i":"咖啡","t":"场景建议","d":"适合逛街、探店、咖啡厅发呆——怎么舒服怎么来。"}]},{"name":"轻熟约会风","img":"PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgNDAwIj48cmVjdCBmaWxsPSIjZTkxZTYzIiB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIvPjx0ZXh0IGZpbGw9IiNmZmYiIGZvbnQtc2l6ZT0iMjQiIHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjIwMCIgeT0iMTgwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiI+6L2754af57qm5Lya6aOOPC90ZXh0Pjx0ZXh0IGZpbGw9IiNmOGJiZDAiIGZvbnQtc2l6ZT0iMTYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjIwMCIgeT0iMjEwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiI+5LyY6ZuFIMK3IOa4qeaflCDCtyDnsr7oh7Q8L3RleHQ+PC9zdmc+","items":[{"i":"连衣裙","t":"主打单品","d":"收腰连衣裙 + 薄款针织开衫，优雅温柔恰如其分。"},{"i":"项链","t":"配饰加分","d":"小巧锁骨链 + 珍珠耳钉，精致不过分。"},{"i":"高跟鞋","t":"鞋履选择","d":"细带凉鞋或裸色尖头高跟鞋，女人味满分。"},{"i":"香水","t":"氛围建议","d":"淡香水 + 自然卷发，约会时不经意的小细节最动人。"}]},{"name":"运动活力风","img":"PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgNDAwIj48cmVjdCBmaWxsPSIjZmY5ODAwIiB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIvPjx0ZXh0IGZpbGw9IiNmZmYiIGZvbnQtc2l6ZT0iMjQiIHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjIwMCIgeT0iMTgwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiI+6L+Q5Yqo5rS75Yqb6aOOPC90ZXh0Pjx0ZXh0IGZpbGw9IiNmZmUwYjIiIGZvbnQtc2l6ZT0iMTYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjIwMCIgeT0iMjEwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiI+5py66IO9IMK3IOiIkumAgiDCtyDliqjmhJ88L3RleHQ+PC9zdmc+","items":[{"i":"运动背心","t":"主打单品","d":"运动背心 + 高腰瑜伽裤，舒适与机能兼备。"},{"i":"外套","t":"外搭单品","d":"超轻防晒外套，户外运动随时穿脱。"},{"i":"跑鞋","t":"鞋履选择","d":"专业跑鞋或轻量训练鞋，保护双脚。"},{"i":"耳机","t":"运动配件","d":"无线耳机 + 运动手环，让运动更有节奏感。"}]},{"name":"甜美少女风","img":"PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgNDAwIj48cmVjdCBmaWxsPSIjZjQ4ZmIxIiB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIvPjx0ZXh0IGZpbGw9IiNmZmYiIGZvbnQtc2l6ZT0iMjQiIHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjIwMCIgeT0iMTgwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiI+55Sc576O5bCR5aWz6aOOPC90ZXh0Pjx0ZXh0IGZpbGw9IiNmY2U0ZWMiIGZvbnQtc2l6ZT0iMTYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjIwMCIgeT0iMjEwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiI+5YWD5rCUIMK3IOeUnOW6piDCtyDlj6/niLE8L3RleHQ+PC9zdmc+","items":[{"i":"连衣裙","t":"主打单品","d":"娃娃领碎花连衣裙 + 白色蕾丝袜，甜度拉满。"},{"i":"发饰","t":"发型加分","d":"双马尾或公主编发 + 蝴蝶结发饰，元气少女感。"},{"i":"包包","t":"包袋选择","d":"迷你链条包或马卡龙色斜挎包，小巧可爱。"},{"i":"腮红","t":"妆容建议","d":"粉色腮红 + 水光唇釉，打造清透伪素颜。"}]},{"name":"高街混搭风","img":"PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgNDAwIj48cmVjdCBmaWxsPSIjMjEyMTIxIiB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIvPjx0ZXh0IGZpbGw9IiNmZmYiIGZvbnQtc2l6ZT0iMjQiIHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjIwMCIgeT0iMTgwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiI+6auY6KGX5re35pCt6aOOPC90ZXh0Pjx0ZXh0IGZpbGw9IiM5ZTllOWUiIGZvbnQtc2l6ZT0iMTYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjIwMCIgeT0iMjEwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiI+5oCB5bqmIMK3IOmFt+aEnyDCtyDlqJhtYW7lubPooaE8L3RleHQ+PC9zdmc+","items":[{"i":"西装","t":"主打单品","d":"廓形西装外套 + 宽松阔腿裤，娘man平衡。"},{"i":"墨镜","t":"点睛配饰","d":"大框墨镜 + 金属链条腰带，态度十足。"},{"i":"靴子","t":"鞋履选择","d":"及膝长靴或厚底马丁靴，酷感拉满。"},{"i":"包包","t":"包袋搭配","d":"腋下包或链条信封包，利落不拖沓。"}]},{"name":"夏日清凉风","img":"PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgNDAwIj48cmVjdCBmaWxsPSIjMDBiY2Q0IiB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIvPjx0ZXh0IGZpbGw9IiNmZmYiIGZvbnQtc2l6ZT0iMjQiIHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjIwMCIgeT0iMTgwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiI+5aSP5pel5riF5YeJ6aOOPC90ZXh0Pjx0ZXh0IGZpbGw9IiNiMmViZjIiIGZvbnQtc2l6ZT0iMTYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjIwMCIgeT0iMjEwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiI+5riF5YeJIMK3IOmYsuaZkiDCtyDluqblgYc8L3RleHQ+PC9zdmc+","items":[{"i":"吊带裙","t":"主打单品","d":"吊带长裙 + 轻薄防晒衫，清凉又防晒。"},{"i":"帽子","t":"防晒神器","d":"宽檐草帽 + UV400太阳镜，防晒造型两不误。"},{"i":"凉鞋","t":"鞋履选择","d":"平底凉拖鞋或草编坡跟鞋，度假感十足。"},{"i":"防晒","t":"夏日贴士","d":"SPF50+防晒霜随身带，每隔两小时补涂一次。"}]},{"name":"冬日保暖时尚风","img":"PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgNDAwIj48cmVjdCBmaWxsPSIjMTU2NWMwIiB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIvPjx0ZXh0IGZpbGw9IiNmZmYiIGZvbnQtc2l6ZT0iMjIiIHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjIwMCIgeT0iMTgwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiI+5Yas5pel5L+d5pqW5pe25bCa6aOOPC90ZXh0Pjx0ZXh0IGZpbGw9IiM5MGNhZjkiIGZvbnQtc2l6ZT0iMTYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjIwMCIgeT0iMjEwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiI+5L+d5pqWIMK3IOeyvuiHtCDCtyDlj6Dnqb88L3RleHQ+PC9zdmc+","items":[{"i":"大衣","t":"主打单品","d":"长款羊毛大衣 + 高领打底衫，保暖不臃肿。"},{"i":"围巾","t":"保暖配饰","d":"羊绒围巾 + 皮手套，风雪天也精致。"},{"i":"靴子","t":"鞋履选择","d":"过膝长靴或加绒短靴，显瘦又保暖。"},{"i":"穿搭贴士","t":"叠穿法则","d":"打底+针织+外套，室内室外随心切换。"}]},{"name":"国潮复古风","img":"PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgNDAwIj48cmVjdCBmaWxsPSIjYzYyODI4IiB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIvPjx0ZXh0IGZpbGw9IiNmZmYiIGZvbnQtc2l6ZT0iMjQiIHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjIwMCIgeT0iMTgwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiI+5Zu95r2u5aSN5Y+k6aOOPC90ZXh0Pjx0ZXh0IGZpbGw9IiNlZjlhOWEiIGZvbnQtc2l6ZT0iMTYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjIwMCIgeT0iMjEwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiI+5Lyg57ufIMK3IOmfteWRsyDCtyDlh7rniYc8L3RleHQ+PC9zdmc+","items":[{"i":"旗袍","t":"主打单品","d":"改良旗袍连衣裙或盘扣上衣，传统韵味十足。"},{"i":"扇子","t":"氛围道具","d":"折扇 + 刺绣手包，拍照出片率极高。"},{"i":"布鞋","t":"鞋履选择","d":"绣花布鞋或方头玛丽珍鞋，复古舒适。"},{"i":"口红","t":"妆容建议","d":"复古红唇 + 细眉，东方美人的韵味。"}]},{"name":"极简高级感","img":"PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgNDAwIj48cmVjdCBmaWxsPSIjNzg5MDljIiB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIvPjx0ZXh0IGZpbGw9IiNmZmYiIGZvbnQtc2l6ZT0iMjQiIHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjIwMCIgeT0iMTgwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiI+5p6B566A6auY57qn5oSfPC90ZXh0Pjx0ZXh0IGZpbGw9IiNjZmQ4ZGMiIGZvbnQtc2l6ZT0iMTYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjIwMCIgeT0iMjEwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiI+TGVzcyBpcyBNb3JlPC90ZXh0Pjwvc3ZnPg==","items":[{"i":"羊绒衫","t":"主打单品","d":"纯色羊绒衫 + 阔腿西装裤，less is more。"},{"i":"手表","t":"点睛细节","d":"极简腕表 + 单颗珍珠耳钉，少即是多。"},{"i":"皮鞋","t":"鞋履选择","d":"黑色尖头平底鞋或方头乐福鞋，质感取胜。"},{"i":"包包","t":"包袋搭配","d":"极简水桶包或信封包，皮料质感决定一切。"}]},
+{"name":"职场通勤风","img":"GEN","items":[{"i":"衬衫","t":"主打单品","d":"白色真丝衬衫 + 深灰九分烟管裤，利落有型，气场全开。"},{"i":"手表","t":"细节加分","d":"金色细带腕表，低调中透出专业感。"},{"i":"高跟鞋","t":"鞋履选择","d":"黑色尖头细跟鞋或猫跟鞋，拉伸腿部线条。"},{"i":"包包","t":"包袋搭配","d":"黑色托特包，容量与质感兼备，通勤必备。"}]},{"name":"周末休闲风","img":"GEN","items":[{"i":"卫衣","t":"主打单品","d":"宽松字母卫衣 + 高腰直筒牛仔裤，减龄又舒适。"},{"i":"帽子","t":"点睛单品","d":"棒球帽 + 帆布托特包，轻松随性。"},{"i":"运动鞋","t":"鞋履选择","d":"厚底老爹鞋或经典帆布鞋，舒适暴走无压力。"},{"i":"咖啡","t":"场景建议","d":"适合逛街、探店、咖啡厅发呆——怎么舒服怎么来。"}]},{"name":"轻熟约会风","img":"GEN","items":[{"i":"连衣裙","t":"主打单品","d":"收腰连衣裙 + 薄款针织开衫，优雅温柔恰如其分。"},{"i":"项链","t":"配饰加分","d":"小巧锁骨链 + 珍珠耳钉，精致不过分。"},{"i":"高跟鞋","t":"鞋履选择","d":"细带凉鞋或裸色尖头高跟鞋，女人味满分。"},{"i":"香水","t":"氛围建议","d":"淡香水 + 自然卷发，约会时不经意的小细节最动人。"}]},{"name":"运动活力风","img":"GEN","items":[{"i":"运动背心","t":"主打单品","d":"运动背心 + 高腰瑜伽裤，舒适与机能兼备。"},{"i":"外套","t":"外搭单品","d":"超轻防晒外套，户外运动随时穿脱。"},{"i":"跑鞋","t":"鞋履选择","d":"专业跑鞋或轻量训练鞋，保护双脚。"},{"i":"耳机","t":"运动配件","d":"无线耳机 + 运动手环，让运动更有节奏感。"}]},{"name":"甜美少女风","img":"GEN","items":[{"i":"连衣裙","t":"主打单品","d":"娃娃领碎花连衣裙 + 白色蕾丝袜，甜度拉满。"},{"i":"发饰","t":"发型加分","d":"双马尾或公主编发 + 蝴蝶结发饰，元气少女感。"},{"i":"包包","t":"包袋选择","d":"迷你链条包或马卡龙色斜挎包，小巧可爱。"},{"i":"腮红","t":"妆容建议","d":"粉色腮红 + 水光唇釉，打造清透伪素颜。"}]},{"name":"高街混搭风","img":"GEN","items":[{"i":"西装","t":"主打单品","d":"廓形西装外套 + 宽松阔腿裤，娘man平衡。"},{"i":"墨镜","t":"点睛配饰","d":"大框墨镜 + 金属链条腰带，态度十足。"},{"i":"靴子","t":"鞋履选择","d":"及膝长靴或厚底马丁靴，酷感拉满。"},{"i":"包包","t":"包袋搭配","d":"腋下包或链条信封包，利落不拖沓。"}]},{"name":"夏日清凉风","img":"GEN","items":[{"i":"吊带裙","t":"主打单品","d":"吊带长裙 + 轻薄防晒衫，清凉又防晒。"},{"i":"帽子","t":"防晒神器","d":"宽檐草帽 + UV400太阳镜，防晒造型两不误。"},{"i":"凉鞋","t":"鞋履选择","d":"平底凉拖鞋或草编坡跟鞋，度假感十足。"},{"i":"防晒","t":"夏日贴士","d":"SPF50+防晒霜随身带，每隔两小时补涂一次。"}]},{"name":"冬日保暖时尚风","img":"GEN","items":[{"i":"大衣","t":"主打单品","d":"长款羊毛大衣 + 高领打底衫，保暖不臃肿。"},{"i":"围巾","t":"保暖配饰","d":"羊绒围巾 + 皮手套，风雪天也精致。"},{"i":"靴子","t":"鞋履选择","d":"过膝长靴或加绒短靴，显瘦又保暖。"},{"i":"穿搭贴士","t":"叠穿法则","d":"打底+针织+外套，室内室外随心切换。"}]},{"name":"国潮复古风","img":"GEN","items":[{"i":"旗袍","t":"主打单品","d":"改良旗袍连衣裙或盘扣上衣，传统韵味十足。"},{"i":"扇子","t":"氛围道具","d":"折扇 + 刺绣手包，拍照出片率极高。"},{"i":"布鞋","t":"鞋履选择","d":"绣花布鞋或方头玛丽珍鞋，复古舒适。"},{"i":"口红","t":"妆容建议","d":"复古红唇 + 细眉，东方美人的韵味。"}]},{"name":"极简高级感","img":"GEN","items":[{"i":"羊绒衫","t":"主打单品","d":"纯色羊绒衫 + 阔腿西装裤，less is more。"},{"i":"手表","t":"点睛细节","d":"极简腕表 + 单颗珍珠耳钉，少即是多。"},{"i":"皮鞋","t":"鞋履选择","d":"黑色尖头平底鞋或方头乐福鞋，质感取胜。"},{"i":"包包","t":"包袋搭配","d":"极简水桶包或信封包，皮料质感决定一切。"}]},
 ];
+/* ================= 穿搭图片生成器 ================= */
+/* 为没有真实照片的穿搭生成清晰矢量插画卡片（替代模糊的纯色文字占位图） */
+const OUTFIT_PALETTES = [
+  ["#3a4a5e","#5d7a96"], // 职场通勤 - 藏青
+  ["#2e8b57","#5cb87f"], // 周末休闲 - 草绿
+  ["#c84b6e","#e88aa6"], // 轻熟约会 - 玫红
+  ["#1f8a9c","#52c2d4"], // 运动活力 - 青蓝
+  ["#d98a2b","#f0b265"], // 甜美少女 - 蜜橙
+  ["#8a5cc4","#b08ee0"], // 高街混搭 - 紫
+  ["#0fa3b1","#5fd0d8"], // 夏日清凉 - 湖蓝
+  ["#7a5a4a","#a8856f"], // 冬日保暖 - 驼棕
+  ["#c0392b","#e57368"], // 国潮复古 - 中国红
+  ["#54657a","#8295a8"], // 极简高级 - 石板灰
+  ["#b5732b","#d9a05a"], // 复古 - 赭石
+  ["#3d7a4f","#6fb084"], // 田园 - 橄榄绿
+  ["#9c3d6e","#c8739a"], // 法式 - 酒红粉
+  ["#2b6f9c","#5aa3c4"], // 清新 - 天蓝
+  ["#6a5a8c","#9a8ac0"], // 梦幻 - 薰衣草
+  ["#a05a3d","#c98a65"], // 暖调 - 焦糖
+];
+function genOutfitSVG(name, idx){
+  const pal = OUTFIT_PALETTES[idx % OUTFIT_PALETTES.length];
+  const c1 = pal[0], c2 = pal[1];
+  const e = s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">'+
+    '<defs><linearGradient id="g'+idx+'" x1="0" y1="0" x2="0" y2="1">'+
+    '<stop offset="0" stop-color="'+c1+'"/><stop offset="1" stop-color="'+c2+'"/></linearGradient>'+
+    '<linearGradient id="d'+idx+'" x1="0" y1="0" x2="0" y2="1">'+
+    '<stop offset="0" stop-color="#ffffff" stop-opacity="0.25"/><stop offset="1" stop-color="#ffffff" stop-opacity="0.06"/>'+
+    '</linearGradient></defs>'+
+    '<rect width="400" height="400" fill="url(#g'+idx+')"/>'+
+    '<circle cx="200" cy="165" r="130" fill="#ffffff" opacity="0.06"/>'+
+    '<g transform="translate(200,205)">'+
+    '<rect x="-26" y="58" width="18" height="96" rx="9" fill="#f2d3bf"/>'+
+    '<rect x="8" y="58" width="18" height="96" rx="9" fill="#f2d3bf"/>'+
+    '<ellipse cx="-17" cy="158" rx="22" ry="9" fill="#2c2c34"/>'+
+    '<ellipse cx="17" cy="158" rx="22" ry="9" fill="#2c2c34"/>'+
+    '<path d="M -40 -28 Q 0 -44 40 -28 L 58 72 Q 0 92 -58 72 Z" fill="url(#d'+idx+')"/>'+
+    '<path d="M -40 -28 Q 0 -44 40 -28 L 52 60 Q 0 76 -52 60 Z" fill="#ffffff" opacity="0.92"/>'+
+    '<rect x="-52" y="-26" width="14" height="74" rx="7" fill="#f2d3bf"/>'+
+    '<rect x="38" y="-26" width="14" height="74" rx="7" fill="#f2d3bf"/>'+
+    '<rect x="-9" y="-52" width="18" height="26" rx="8" fill="#f7ddc8"/>'+
+    '<path d="M -28 -78 Q 0 -116 28 -78 Q 32 -56 22 -52 L -22 -52 Q -32 -56 -28 -78 Z" fill="#3a2e2a"/>'+
+    '<circle cx="0" cy="-78" r="24" fill="#fbe0cd"/>'+
+    '<path d="M -24 -82 Q 0 -104 24 -82 Q 12 -92 0 -90 Q -12 -92 -24 -82 Z" fill="#3a2e2a"/>'+
+    '<rect x="-44" y="6" width="88" height="9" rx="4" fill="'+c1+'"/>'+
+    '</g>'+
+    '<rect x="0" y="338" width="400" height="62" fill="#000000" opacity="0.30"/>'+
+    '<text x="200" y="378" font-family="sans-serif" font-size="26" font-weight="700" fill="#ffffff" text-anchor="middle" letter-spacing="2">'+e(name)+'</text>'+
+    '</svg>';
+  return 'data:image/svg+xml,'+encodeURIComponent(svg);
+}
+function outfitImg(o, idx){
+  if(o.img && o.img.charAt(0) === '/') return 'data:image/jpeg;base64,'+o.img; // 真实照片
+  return genOutfitSVG(o.name||'', idx||0); // 生成清晰矢量插画
+}
 /* ================= 数据：名人名句 ================= */
 const QUOTES = [
 {"text": "逝者如斯夫，不舍昼夜。", "src": "《论语 · 子罕》 孔子", "exp": "消逝的时光就像这奔流的河水一样，日夜不停地流去。", "deep": "孔子感叹时间如流水般一去不返，提醒人们珍惜光阴、自强不息。它并非单纯伤感，更是积极劝勉：正因时光不可逆，人生更应勤勉精进。", "c": "cn", "story": "相传孔子晚年周游列国归来，站在河岸边望着滔滔流水，久久不语。弟子问他在想什么，孔子便说了这句话。当时他已年过六旬，一生理想未能实现，看着流水便想到自己奔波的岁月。这句感叹里既有对时间的敬畏，也有壮志未酬的怅惘。"},
@@ -943,7 +1032,7 @@ function renderHome(){
   
   const o = OUTFITS[di % OUTFITS.length];
   $("outfitList").innerHTML =
-    '<div class="outfit-hero"><img src="data:image/jpeg;base64,'+o.img+'" alt="'+esc(o.name)+'" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'"><div class="outfit-hero-tag" style="display:none;align-items:center;justify-content:center;width:100%;height:200px;background:#f0f0f0;font-size:36px">'+esc(o.name.substring(0,2))+'</div><div class="outfit-hero-tag">'+esc(o.name)+' · 风格灵感</div></div>'+
+    '<div class="outfit-hero"><img src="'+outfitImg(o, di % OUTFITS.length)+'" alt="'+esc(o.name)+'" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'"><div class="outfit-hero-tag" style="display:none;align-items:center;justify-content:center;width:100%;height:200px;background:#f0f0f0;font-size:36px">'+esc(o.name.substring(0,2))+'</div><div class="outfit-hero-tag">'+esc(o.name)+' · 风格灵感</div></div>'+
     o.items.map(it=>
       '<div class="outfit-item"><div class="o-icon">'+it.i+'</div><div><div class="o-title">'+esc(it.t)+'</div><div class="o-desc">'+esc(it.d)+'</div></div></div>'
     ).join("");
@@ -1085,7 +1174,16 @@ function renderOutfitRecommend(temp, hum, wind, wcode, cond, isDay){
   if(isRain) tips.push({icon:'🌂', text:'记得带伞'});
   if(temp>=28) tips.push({icon:'☀️', text:'注意防晒补水'});
   if(temp<10) tips.push({icon:'🧣', text:'注意保暖防寒'});
-  tipsEl.innerHTML = tips.map(t=>'<div class="outfit-tip-item">'+t.icon+' '+t.text+'</div>').join('');
+  // 根据天气选出最匹配的穿搭图片，放在推荐顶部
+  let mIdx = 0;
+  if(temp>=35) mIdx=4; else if(temp>=30) mIdx=2; else if(temp>=22) mIdx=3; else if(temp>=14) mIdx=0; else mIdx=1;
+  const isHeavyRain = [55,57,65,67,82].includes(wcode);
+  if(isHeavyRain && (mIdx===2||mIdx===4)) mIdx=0;
+  if(isSnow || temp<5) mIdx=1;
+  const mo = OUTFITS[mIdx] || OUTFITS[0];
+  tipsEl.innerHTML =
+    '<div class="outfit-rec-hero"><img src="'+outfitImg(mo, mIdx)+'" alt="'+esc(mo.name)+'"><div class="o-rec-tag">🌟 为你推荐 · '+esc(mo.name)+'</div></div>'+
+    tips.map(t=>'<div class="outfit-tip-item">'+t.icon+' '+t.text+'</div>').join('');
 }
 function renderOutfitInspiration(){
   const gridEl = document.getElementById('outfitGrid');
@@ -1100,7 +1198,7 @@ function renderOutfitInspiration(){
     const isMatch = i===0;
     cards.push('<div class="outfit-img-card'+(isMatch?' outfit-match':'')+'">'+
       '<div class="outfit-img-wrap">'+
-      '<img src="data:image/jpeg;base64,'+o.img+'" alt="'+esc(o.name)+'" loading="lazy">'+
+      '<img src="'+outfitImg(o, idx)+'" alt="'+esc(o.name)+'" loading="lazy">'+
       '<div class="outfit-img-label">'+esc(o.name)+'</div>'+
       (isMatch?'<div class="outfit-match-badge">匹配天气</div>':'')+
       '</div></div>');
@@ -1123,6 +1221,7 @@ function loadCqOutfit(){
       const wcode = cur.weather_code||0;
       const isDay = cur.is_day !== 0;
       const cond = wmoDesc(wcode);
+      cqLastTemp = temp; // 记录用于数字过渡动画
       // 未来几小时预报
       const hourly = d.hourly||{};
       const nowHour = new Date().getHours();
@@ -1136,15 +1235,54 @@ function loadCqOutfit(){
         });
       }
       el.innerHTML = renderCqOutfit(cond, temp, hum, wind+"km/h", "体感"+feel+"°C", feel, wcode, isDay, forecast);
+      animateTemp($("cqTemp"), temp);
     })
     .catch(()=>{
       const m = new Date().getMonth()+1;
       const t = (m>=6&&m<=8)?35:(m>=3&&m<=5)?22:(m>=9&&m<=11)?18:8;
+      cqLastTemp = t;
       el.innerHTML = renderCqOutfit("", t, "", "", "", t, 0, true, []);
+      animateTemp($("cqTemp"), t);
     });
-  // 每小时自动刷新一次
+  startCqLiveClock();
+  // 每 10 分钟自动刷新一次
   if(cqTimer) clearInterval(cqTimer);
-  cqTimer = setInterval(loadCqOutfit, 3600000);
+  cqTimer = setInterval(loadCqOutfit, 600000);
+}
+/* 实时时钟：每秒更新一次，营造"实时变换"的动态感 */
+let cqLastTemp = 25;
+function startCqLiveClock(){
+  const tick = ()=>{
+    const tEl = document.getElementById("cqClock");
+    if(tEl){
+      const n = new Date();
+      const p = x=>String(x).padStart(2,"0");
+      tEl.textContent = p(n.getHours())+":"+p(n.getMinutes())+":"+p(n.getSeconds());
+    }
+  };
+  tick();
+  if(window._cqClockTimer) clearInterval(window._cqClockTimer);
+  window._cqClockTimer = setInterval(tick, 1000);
+}
+/* 手动刷新天气 */
+function refreshCqWeather(){
+  const btn = document.getElementById("cqRefreshBtn");
+  if(btn) btn.classList.add("spin");
+  loadCqOutfit();
+  setTimeout(()=>{ if(btn) btn.classList.remove("spin"); }, 900);
+}
+/* 温度数字过渡动画 */
+function animateTemp(el, to){
+  if(!el) return;
+  const from = parseInt(el.textContent)||to;
+  if(from===to){ el.textContent = to+"°"; return; }
+  const step = (to-from)/20;
+  let cur = from, n=0;
+  const iv = setInterval(()=>{
+    cur += step; n++;
+    el.textContent = Math.round(cur)+"°";
+    if(n>=20){ el.textContent = to+"°"; clearInterval(iv); }
+  }, 24);
 }
 /* WMO 天气码转中文 */
 function wmoDesc(code){
@@ -1160,6 +1298,19 @@ function wmoDesc(code){
     95:"雷暴",96:"雷暴伴冰雹",99:"强雷暴伴冰雹"
   };
   return m[code]||"";
+}
+/* 根据天气码返回带动画的天气图标 */
+function weatherIconHTML(wcode, isDay){
+  let icon = "🌤️", cls = "wi-float";
+  if(wcode===0){ icon = isDay?"☀️":"🌙"; cls = isDay?"wi-sun":"wi-float"; }
+  else if(wcode===1){ icon = isDay?"🌤️":"🌙"; }
+  else if(wcode===2){ icon = "⛅"; }
+  else if(wcode===3){ icon = "☁️"; }
+  else if(wcode===45||wcode===48){ icon = "🌫️"; }
+  else if([51,53,55,56,57,61,63,65,66,67,80,81,82].includes(wcode)){ icon = "🌧️"; cls = "wi-rain"; }
+  else if([71,73,75,77,85,86].includes(wcode)){ icon = "❄️"; cls = "wi-float"; }
+  else if([95,96,99].includes(wcode)){ icon = "⛈️"; }
+  return '<span class="cq-wicon '+cls+'">'+icon+'</span>';
 }
 function renderCqOutfit(cond, temp, hum, wind, feelText, feelTemp, wcode, isDay, forecast){
   /* === 动态生成穿搭建议：每一项都根据实时温度/体感/天气/湿度/风力计算 === */
@@ -1323,7 +1474,7 @@ function renderCqOutfit(cond, temp, hum, wind, feelText, feelTemp, wcode, isDay,
     OUTFITS.map((o,i)=>{
       const isMatch = i===matchIdx;
       return '<div class="cq-img-card'+(isMatch?' cq-match':'')+'" onclick="openCqViewer('+i+')">'+
-        '<img src="data:image/jpeg;base64,'+o.img+'" alt="'+esc(o.name)+'" loading="lazy">'+
+        '<img src="'+outfitImg(o, i)+'" alt="'+esc(o.name)+'" loading="lazy">'+
         '<div class="cq-img-cap">'+esc(o.name)+'</div>'+
         (isMatch?'<div class="cq-match-badge">推荐</div>':'')+
       '</div>';
@@ -1331,8 +1482,10 @@ function renderCqOutfit(cond, temp, hum, wind, feelText, feelTemp, wcode, isDay,
     '</div>';
   return '<div class="cq-outfit-head">'+
     '<span class="cq-outfit-loc">📍 重庆今日穿搭</span>'+
-    '<span class="cq-outfit-temp">'+temp+'°</span>'+
-    '<span class="cq-outfit-desc">'+label+condText+(detail?'<br>'+detail:'')+'<br><span class="cq-update">'+updateTime+' · 每小时自动刷新</span></span>'+
+    weatherIconHTML(wcode, isDay)+
+    '<span class="cq-outfit-temp" id="cqTemp">'+temp+'°</span>'+
+    '<span class="cq-outfit-desc"><span class="cq-live"><span class="cq-dot"></span>实时</span> '+label+condText+(detail?'<br>'+detail:'')+'<br><span class="cq-update">'+updateTime+' · 每10分钟刷新 · 🕐 <span id="cqClock">--:--:--</span></span></span>'+
+    '<button class="cq-refresh" id="cqRefreshBtn" onclick="refreshCqWeather()" title="刷新天气">🔄</button>'+
     '</div>'+
     imgHtml+
     '<div class="cq-outfit-tips">'+
@@ -1349,7 +1502,7 @@ function openCqViewer(i){
     document.body.appendChild(v);
     v.addEventListener("click", ()=>v.remove());
   }
-  v.innerHTML = '<img src="data:image/jpeg;base64,'+o.img+'" alt="'+esc(o.name)+'">'+
+  v.innerHTML = '<img src="'+outfitImg(o, i)+'" alt="'+esc(o.name)+'">'+
     '<div class="cv-name">'+esc(o.name)+' · 点击任意处关闭</div>';
 }
 /* 根据天气码生成专项建议 */
