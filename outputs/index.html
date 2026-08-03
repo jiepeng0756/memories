@@ -1178,9 +1178,9 @@ function renderCqShell(loading){
   return '<div class="cq-outfit-head">'+
     '<span class="cq-outfit-loc">📍 重庆今日穿搭</span>'+
     '<span class="cq-wicon wi-float">🌤️</span>'+
-    '<span class="cq-outfit-temp" id="cqTemp">'+(loading?'··':'--')+'</span>'+
-    '<span class="cq-outfit-desc"><span class="cq-live"><span class="cq-dot"></span>实时</span> '+(loading?'正在获取重庆实时气象…':'')+'<br><span class="cq-update">🕐 <span id="cqClock">--:--:--</span></span></span>'+
-    '<button class="cq-refresh" id="cqRefreshBtn" onclick="refreshCqWeather()" title="刷新天气">🔄</button>'+
+    '<span class="cq-outfit-temp cq-temp">'+(loading?'··':'--')+'</span>'+
+    '<span class="cq-outfit-desc"><span class="cq-live"><span class="cq-dot"></span>实时</span> '+(loading?'正在获取重庆实时气象…':'')+'<br><span class="cq-update">🕐 <span class="cq-clock">--:--:--</span></span></span>'+
+    '<button class="cq-refresh cq-refresh-btn" onclick="refreshCqWeather(this)" title="刷新天气">🔄</button>'+
     '</div>'+
     (loading?'<div class="cq-outfit-tips"><span class="cq-tip">⏳ 正在连接气象数据，动态穿搭建议稍后生成…</span></div>':'');
 }
@@ -1217,14 +1217,14 @@ function loadCqOutfit(targetId){
         });
       }
       el.innerHTML = renderCqOutfit(cond, temp, hum, wind+"km/h", "体感"+feel+"°C", feel, wcode, isDay, forecast);
-      animateTemp($("cqTemp"), temp);
+      animateTemp(el.querySelector(".cq-temp"), temp);
     })
     .catch(()=>{
       const m = new Date().getMonth()+1;
       const t = (m>=6&&m<=8)?35:(m>=3&&m<=5)?22:(m>=9&&m<=11)?18:8;
       cqLastTemp = t;
       el.innerHTML = renderCqOutfit("", t, "", "", "", t, 0, true, []);
-      animateTemp($("cqTemp"), t);
+      animateTemp(el.querySelector(".cq-temp"), t);
     });
   startCqLiveClock();
   // 每 10 分钟自动刷新一次
@@ -1235,22 +1235,21 @@ function loadCqOutfit(targetId){
 let cqLastTemp = 25;
 function startCqLiveClock(){
   const tick = ()=>{
-    const tEl = document.getElementById("cqClock");
-    if(tEl){
-      const n = new Date();
-      const p = x=>String(x).padStart(2,"0");
-      tEl.textContent = p(n.getHours())+":"+p(n.getMinutes())+":"+p(n.getSeconds());
-    }
+    const n = new Date();
+    const p = x=>String(x).padStart(2,"0");
+    const txt = p(n.getHours())+":"+p(n.getMinutes())+":"+p(n.getSeconds());
+    document.querySelectorAll(".cq-clock").forEach(tEl=>{ tEl.textContent = txt; });
   };
   tick();
   if(window._cqClockTimer) clearInterval(window._cqClockTimer);
   window._cqClockTimer = setInterval(tick, 1000);
 }
 /* 手动刷新天气 */
-function refreshCqWeather(){
-  const btn = document.getElementById("cqRefreshBtn");
+function refreshCqWeather(btn){
   if(btn) btn.classList.add("spin");
-  loadCqOutfit();
+  const wrap = btn ? btn.closest("[id^=cqOutfit]") : null;
+  const tid = wrap ? wrap.id : "cqOutfit";
+  loadCqOutfit(tid);
   setTimeout(()=>{ if(btn) btn.classList.remove("spin"); }, 900);
 }
 /* 温度数字过渡动画 */
@@ -1465,9 +1464,9 @@ function renderCqOutfit(cond, temp, hum, wind, feelText, feelTemp, wcode, isDay,
   return '<div class="cq-outfit-head">'+
     '<span class="cq-outfit-loc">📍 重庆今日穿搭</span>'+
     weatherIconHTML(wcode, isDay)+
-    '<span class="cq-outfit-temp" id="cqTemp">'+temp+'°</span>'+
-    '<span class="cq-outfit-desc"><span class="cq-live"><span class="cq-dot"></span>实时</span> '+label+condText+(detail?'<br>'+detail:'')+'<br><span class="cq-update">'+updateTime+' · 每10分钟刷新 · 🕐 <span id="cqClock">--:--:--</span></span></span>'+
-    '<button class="cq-refresh" id="cqRefreshBtn" onclick="refreshCqWeather()" title="刷新天气">🔄</button>'+
+    '<span class="cq-outfit-temp cq-temp">'+temp+'°</span>'+
+    '<span class="cq-outfit-desc"><span class="cq-live"><span class="cq-dot"></span>实时</span> '+label+condText+(detail?'<br>'+detail:'')+'<br><span class="cq-update">'+updateTime+' · 每10分钟刷新 · 🕐 <span class="cq-clock">--:--:--</span></span></span>'+
+    '<button class="cq-refresh cq-refresh-btn" onclick="refreshCqWeather(this)" title="刷新天气">🔄</button>'+
     '</div>'+
     imgHtml+
     '<div class="cq-outfit-tips">'+
