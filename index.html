@@ -558,24 +558,15 @@ img.emoji{
         <h2>今日穿搭</h2>
         <p class="p-sub">根据气温和天气 ▸ 为你推荐 ▸ 穿搭灵感</p>
       </div>
-      <!-- 今日天气 -->
-      <div class="card outfit-weather-card">
-        <div class="outfit-weather-header">
-          <span class="outfit-weather-loc">重庆 天气</span>
-          <span class="outfit-weather-temp" id="outfitTemp">--?C</span>
-        </div>
-        <div class="outfit-weather-desc" id="outfitWeatherDesc">获取天气中…</div>
-        <div class="outfit-weather-detail" id="outfitWeatherDetail"></div>
+      <!-- 重庆今日穿搭（完整版：实时天气 + 动态建议 + 真人效果图） -->
+      <div class="card cq-outfit">
+        <span class="card-tag">🌤️ 重庆今日穿搭</span>
+        <div id="cqOutfitPage"></div>
       </div>
-      <!-- 穿搭推荐 -->
-      <div class="card outfit-recommend-card">
-        <span class="card-tag">今日穿搭推荐</span>
-        <div id="outfitTips"></div>
-      </div>
-      <!-- 穿搭灵感 -->
+      <!-- 全部 15 套穿搭风格展示 -->
       <div class="card outfit-inspiration-card">
         <span class="card-tag">穿搭灵感</span>
-        <p class="outfit-inspire-desc">每日精选5套穿搭图片供参考</p>
+        <p class="outfit-inspire-desc">15 套 AI 真人穿搭效果图 · 横向滑动查看</p>
         <div class="outfit-grid" id="outfitGrid"></div>
       </div>
     </section>
@@ -1072,8 +1063,8 @@ let cqTimer = null;
 
 /* ================= 重庆今日穿搭 ================= */
 function loadOutfitPage(){
-  renderOutfitWeather();
-  renderOutfitInspiration();
+  loadCqOutfit("cqOutfitPage");   // 完整版：实时天气+动态建议+真人效果图（和首页同引擎）
+  renderOutfitInspiration();       // 15套穿搭风格网格展示
 }
 function renderOutfitWeather(){
   const tempEl = document.getElementById('outfitTemp');
@@ -1171,19 +1162,13 @@ function renderOutfitRecommend(temp, hum, wind, wcode, cond, isDay){
 function renderOutfitInspiration(){
   const gridEl = document.getElementById('outfitGrid');
   if(!gridEl) return;
-  const now = new Date();
-  const di = dayIndex();
-  const styleIdx = di % OUTFITS.length;
   let cards = [];
-  for(let i=0; i<5; i++){
-    const idx = (styleIdx + i) % OUTFITS.length;
-    const o = OUTFITS[idx];
-    const isMatch = i===0;
-    cards.push('<div class="outfit-img-card'+(isMatch?' outfit-match':'')+'">'+
+  for(let i=0; i<OUTFITS.length; i++){
+    const o = OUTFITS[i];
+    cards.push('<div class="outfit-img-card">'+
       '<div class="outfit-img-wrap">'+
-      '<img src="'+outfitImg(o, idx)+'" alt="'+esc(o.name)+'" loading="lazy">'+
+      '<img src="'+outfitImg(o, i)+'" alt="'+esc(o.name)+'" loading="lazy">'+
       '<div class="outfit-img-label">'+esc(o.name)+'</div>'+
-      (isMatch?'<div class="outfit-match-badge">匹配天气</div>':'')+
       '</div></div>');
   }
   gridEl.innerHTML = cards.join('');
@@ -1199,8 +1184,9 @@ function renderCqShell(loading){
     '</div>'+
     (loading?'<div class="cq-outfit-tips"><span class="cq-tip">⏳ 正在连接气象数据，动态穿搭建议稍后生成…</span></div>':'');
 }
-function loadCqOutfit(){
-  const el = $("cqOutfit");
+function loadCqOutfit(targetId){
+  targetId = targetId || "cqOutfit";
+  const el = $(targetId);
   if(!el) return;
   // 立即渲染动态骨架（实时时钟/刷新按钮/动画图标），不等待 API 返回
   el.innerHTML = renderCqShell(true);
